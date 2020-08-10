@@ -4,6 +4,7 @@ import * as cors from 'cors';
 const app = express();
 
 app.use(cors());
+app.use(express.json());
 
 app.get( "/", ( req, res ) => {
   res.send([
@@ -14,7 +15,8 @@ app.get( "/", ( req, res ) => {
 });
 
 app.post( "/", ( req, res ) => {
-  res.send({"code": "luke10xy", "url": "https://luke10x.com"})
+  console.log(req);
+  res.send({"code": (new Date()).getTime(), "url": "https://luke10x.com"})
 });
 
 const port = 9090;
