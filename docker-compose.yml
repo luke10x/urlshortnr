@@ -1,4 +1,3 @@
-
 version: "3.7"
 services:
   shortnr:
@@ -16,17 +15,17 @@ services:
     ports:
       - 8080:8080
 
-  # sync:
-  #   image: node
-  #   volumes:
-  #     - "./sync:/mnt/sync"
-  #   working_dir: "/mnt/sync"
-  #   entrypoint: "/bin/bash -c"
-  #   command:
-  #     - |
-  #       CI=true npm start || (\
-  #         echo "⛔ \`npm start\` failed, but the container is running..." && \
-  #         tail -f /dev/null \
-  #       )
-  #   ports:
-  #     - 4000:4000
+  urlstore:
+    image: node
+    volumes:
+      - "./urlstore:/mnt/urlstore"
+    working_dir: "/mnt/urlstore"
+    entrypoint: "/bin/bash -c"
+    command:
+      - |
+        npm start || (\
+          echo "⛔ \`npm start\` failed, but the container is running..." && \
+          tail -f /dev/null \
+        )
+    ports:
+      - 9090:9090
