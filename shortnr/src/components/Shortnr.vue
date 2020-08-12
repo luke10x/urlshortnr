@@ -129,10 +129,11 @@ export default class Shortnr extends Vue {
       return;
     }
 
+    const payload = { url: this.inputValue };
+
     this.inputValue = "";
     this.loading = true;
 
-    const payload = { url: this.inputValue };
     fetch("http://penguin.linux.test:9090/", {
       method: "post",
       headers: {

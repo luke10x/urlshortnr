@@ -1,25 +1,44 @@
-import * as express from 'express';
-import * as cors from 'cors';
+import express from 'express';
+import cors from 'cors';
+import { loadMongoClient } from './db';
+import { MongoClient } from 'mongodb';
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
-app.get( "/", ( req, res ) => {
-  res.send([
-    {"code": "luke10xx", "url": "https://luke10x.dev"},
-    {"code": "githubxx", "url": "https://github.com/luke10x"},
-    {"code": "youtube1", "url": "https://www.youtube.com/watch?v=9JrQP90c45E"},
-  ]);
+app.get( "/", async ( req, res ) => {
+  console.log("🔗 GET");
+
+  const mongoClient = await loadMongoClient() as MongoClient;
+  const db = mongoClient.db('urlstore')
+  const urls = await db.collection('urls').find({}).toArray();
+
+  res.send(urls);
 });
 
-app.post( "/", ( req, res ) => {
-  console.log(req);
-  res.send({"code": (new Date()).getTime(), "url": "https://luke10x.com"})
+app.post( "/", async ( req, res ) => {
+  console.log("🔗 POST: ", req.body);
+
+
+  const newEntry = {
+    code: (new Date()).getTime().toString(36),
+    url: req.body.url
+  };
+
+  const mongoClient = await loadMongoClient() as MongoClient;
+  const db = mongoClient.db('urlstore')
+  const urlCollection = db.collection('urls')
+  urlCollection.insertOne(newEntry)
+    .then(result => {
+      console.log(result)
+    })
+    .catch(error => console.error(error))
+
+  res.send(newEntry)
 });
 
-const port = 9090;
+const port = process.env.PORT || 9090;
 app.listen( port, () => {
   console.log( `🔗 server running on http://localhost:${ port }` );
 });

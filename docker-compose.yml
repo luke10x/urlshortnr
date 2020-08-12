@@ -5,6 +5,8 @@ services:
     volumes:
       - "./shortnr:/mnt/shortnr"
     working_dir: "/mnt/shortnr"
+    environment:
+      URLSTORE_URL: ${URLSTORE_URL:-http://localhost:9090}
     entrypoint: "/bin/bash -c"
     command:
       - |
@@ -20,6 +22,10 @@ services:
     volumes:
       - "./urlstore:/mnt/urlstore"
     working_dir: "/mnt/urlstore"
+    environment:
+      DB_URL: ${DB_URL:-mongodb://mongouser:mongopassword@mongo:27017/urlstore}
+      SHORTNR_URL: ${SHORTNR_URL:-http://localhost:8080}
+      PORT:
     entrypoint: "/bin/bash -c"
     command:
       - |
@@ -29,3 +35,12 @@ services:
         )
     ports:
       - 9090:9090
+
+  mongo:
+    image: mongo
+    volumes:
+      - "./db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d"
+    environment:
+      MONGO_USERNAME: mongouser
+      MONGO_PASSWORD: mongopassword
+      MONGO_DATABASE: urlstore

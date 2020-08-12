@@ -4,7 +4,10 @@ up-shortnr:
 up-urlstore:
 	docker-compose up -d --force-recreate urlstore
 
-up: up-shortnr up-urlstore
+up-mongo:
+	docker-compose up -d --force-recreate mongo
+
+up: up-shortnr up-urlstore up-mongo
 
 logs:
 	docker-compose logs -f
@@ -23,6 +26,11 @@ into-shortnr:
 into-urlstore:
 	docker-compose exec urlstore bash
 
+into-mongo:
+	docker-compose exec mongo bash
+
+into-mongo-db:
+	docker-compose exec mongo mongo urlstore
+
 unrootify:
 	sudo chown -R $$(id -u):$$(id -g) .
-
