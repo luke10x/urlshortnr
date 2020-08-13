@@ -98,7 +98,7 @@ $breakpoint-small: 620px;
         </div>
         <div class="short">
           <a class="url" :href="item.code">{{ item.code }}</a>
-          <a class="copy" href="#" v-on:click="handleCreateUrl">Copy</a>
+          <a class="copy" href="#" v-on:click="copyToClipboard(item.code)">Copy</a>
         </div>
       </li>
     </ul>
@@ -109,6 +109,7 @@ $breakpoint-small: 620px;
 import { Component, Vue } from "vue-property-decorator";
 import { UrlEntry } from "../shared/rest";
 import { fetchWrapper as fetch } from "./boundaries";
+import { copyToClipboard } from "./clipboard";
 
 @Component
 export default class Shortnr extends Vue {
@@ -126,7 +127,9 @@ export default class Shortnr extends Vue {
 
     if (this.inputValue === "") {
       this.error = "Link cannot be empty";
-      setTimeout(() => { this.error = ""; }, 1000);
+      setTimeout(() => {
+        this.error = "";
+      }, 1000);
 
       return;
     }
@@ -153,16 +156,21 @@ export default class Shortnr extends Vue {
         this.urls.unshift(createdEntry);
       } else if (response.status === 503) {
         this.error = "Server is busy, try again later";
-        setTimeout(() => { this.error = ""; }, 1000);
+        setTimeout(() => {
+          this.error = "";
+        }, 1000);
       } else if (response.status === 400) {
-        const message = (await response.json()) as { error: string};
+        const message = (await response.json()) as { error: string };
         this.error = message.error;
-        setTimeout(() => { this.error = ""; }, 1000);
+        setTimeout(() => {
+          this.error = "";
+        }, 1000);
       } else {
         this.error = "Unexpected error occured!";
-        setTimeout(() => { this.error = ""; }, 1000);
+        setTimeout(() => {
+          this.error = "";
+        }, 1000);
       }
-
     } catch (e) {
       console.error("Error while saving url", e);
     } finally {
@@ -181,6 +189,11 @@ export default class Shortnr extends Vue {
     } finally {
       this.loading = false;
     }
+  }
+
+  copyToClipboard(link: string) {
+    alert(`Short URL ${link} copied to clipboard`);
+    copyToClipboard(link);
   }
 }
 </script>

@@ -135,28 +135,30 @@ describe("Shortnr.vue", () => {
     describe("server is busy", () => {
       it("shows error", async () => {
         fetchMock.mockResolvedValue({
-          status: 503,
+          status: 503
         });
-        wrapper.find("[data-url]").setValue("https://luke10x.dev");        
+        wrapper.find("[data-url]").setValue("https://luke10x.dev");
         button.trigger("click");
         await flushPromises();
         expect(wrapper.find("ul li").exists()).toBe(false);
-        expect(wrapper.find(".error").text())
-          .toContain("Server is busy, try again later");
+        expect(wrapper.find(".error").text()).toContain(
+          "Server is busy, try again later"
+        );
       });
     });
 
     describe("server crashed", () => {
       it("shows error", async () => {
         fetchMock.mockResolvedValue({
-          status: 500,
+          status: 500
         });
         wrapper.find("[data-url]").setValue("https://luke10x.dev");
         button.trigger("click");
         await flushPromises();
         expect(wrapper.find("ul li").exists()).toBe(false);
-        expect(wrapper.find(".error").text())
-          .toContain("Unexpected error occured");
+        expect(wrapper.find(".error").text()).toContain(
+          "Unexpected error occured"
+        );
       });
     });
 
@@ -164,15 +166,15 @@ describe("Shortnr.vue", () => {
       it("shows error from the response body", async () => {
         fetchMock.mockResolvedValue({
           status: 400,
-          json: () => Promise.resolve({ error: "The URL must be HTTPS"})
-
+          json: () => Promise.resolve({ error: "The URL must be HTTPS" })
         });
         wrapper.find("[data-url]").setValue("http://luke10x.dev/");
         button.trigger("click");
         await flushPromises();
         expect(wrapper.find("ul li").exists()).toBe(false);
-        expect(wrapper.find(".error").text())
-          .toContain("The URL must be HTTPS");
+        expect(wrapper.find(".error").text()).toContain(
+          "The URL must be HTTPS"
+        );
       });
     });
   });
