@@ -2,14 +2,15 @@
 $breakpoint-small: 620px;
 
 #shortnr-el {
-  background: #8967aa;
   h1 {
     color: #fff;
+    padding: 10pt 0;
+    text-align: center;
   }
 
   > * {
     padding: 0;
-    max-width: 1000px;
+    max-width: 800px;
     margin: 0px auto;
   }
 
@@ -23,9 +24,10 @@ $breakpoint-small: 620px;
       width: 100%;
       border-radius: 5px 0 0 5px;
       border: 0px;
+      padding: 15px;
     }
     button {
-      margin-left: 2px;
+      margin-left: 4px;
       border-radius: 0 5px 5px 0;
       border: 0px;
       background: #f1b31c;
@@ -36,8 +38,8 @@ $breakpoint-small: 620px;
     }
   }
   .error {
-    background: #fff;
-    color: #f00;
+    background: #ffa7c0;
+    color: #781e32;
     border: 3px solid #f00;
     margin-top: 5px;
     padding: 5px;
@@ -50,26 +52,39 @@ $breakpoint-small: 620px;
       background: #fff;
       margin: 5px 0;
       border-radius: 4px;
+      padding: 10px;
       div {
         padding: 5px;
-      }
-      div.long {
-        flex: 1;
-        min-width: $breakpoint-small;
-        text-align: left;
-      }
-      div.short {
-        flex: 1;
-        display: flex;
-        justify-content: space-between center;
-        .url {
-          flex: 1;
-          text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        a, a:hover, a:visited {
+          color: #1e50a0;
         }
-        .copy {
+        &.long {
+          text-align: left;
+          flex-grow: 1;
+          flex-shrink: 0;
+          flex-basis: 60%;
+          @media (max-width: $breakpoint-small) {
+            flex-basis: 100%;
+          }
+        }
+        &.short {
           flex: 1;
-          text-align: right;
-          padding-right: 10px;
+          display: flex;
+          justify-content: space-between center;
+          .url {
+            flex: 1;
+            text-align: left;
+          }
+          .copy {
+            flex: 0 0;
+            text-align: center;
+            // width: 40pt;
+            // padding-right: 0 10px 0 10px;
+            background: #92d3f5;
+          }
         }
       }
     }
@@ -98,7 +113,7 @@ $breakpoint-small: 620px;
         </div>
         <div class="short">
           <a class="url" :href="item.code">{{ item.code }}</a>
-          <a class="copy" href="#" v-on:click="copyToClipboard(item.code)"
+          <a class="copy" href="#" v-on:click="copyToClipboard($event, item.code)"
             >Copy</a
           >
         </div>
@@ -196,7 +211,8 @@ export default class Shortnr extends Vue {
     }
   }
 
-  copyToClipboard(link: string) {
+  copyToClipboard(event: Event, link: string) {
+    event.preventDefault();
     alert(`Short URL ${link} copied to clipboard`);
     copyToClipboard(link);
   }
