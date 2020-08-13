@@ -4,7 +4,7 @@ $breakpoint-small: 620px;
 #shortnr-el {
   background: #8967aa;
   h1 {
-    color:#fff;
+    color: #fff;
   }
 
   > * {
@@ -93,13 +93,13 @@ $breakpoint-small: 620px;
     <div class="error" v-if="error">{{ this.error }}</div>
     <ul>
       <li v-for="item in this.urls" :key="item.code">
-          <div class="long">
-              <a :href="item.url">{{ item.url }}</a>
-          </div>
-          <div class="short">
-            <a class="url" :href="item.code">{{ item.code }}</a>
-            <a class="copy" href="#" v-on:click="handleCreateUrl">Copy</a>
-          </div>
+        <div class="long">
+          <a :href="item.url">{{ item.url }}</a>
+        </div>
+        <div class="short">
+          <a class="url" :href="item.code">{{ item.code }}</a>
+          <a class="copy" href="#" v-on:click="handleCreateUrl">Copy</a>
+        </div>
       </li>
     </ul>
   </div>
@@ -114,18 +114,20 @@ export default class Shortnr extends Vue {
   public loading = false;
   public urls: UrlEntry[] = [];
   public inputValue = "";
-  public error = '';
+  public error = "";
 
   handleCreateUrl(event: Event): void {
     event.preventDefault();
 
-    if (this.loading) { 
+    if (this.loading) {
       return;
     }
 
-    if (this.inputValue === '') {
-      this.error = 'Link cannot be empty';
-      setTimeout(() => { this.error = ''; }, 1000);
+    if (this.inputValue === "") {
+      this.error = "Link cannot be empty";
+      setTimeout(() => {
+        this.error = "";
+      }, 1000);
       return;
     }
 
@@ -137,7 +139,7 @@ export default class Shortnr extends Vue {
     fetch("http://penguin.linux.test:9090/", {
       method: "post",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       body: JSON.stringify(payload)
     })

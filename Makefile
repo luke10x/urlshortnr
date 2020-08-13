@@ -32,5 +32,13 @@ into-mongo:
 into-mongo-db:
 	docker-compose exec mongo mongo urlstore
 
+lint-shortnr:
+	docker-compose run --rm shortnr "npm run lint"
+
+lint-urlstore:
+	docker-compose run --rm urlstore "npm run lint"
+
+lint: lint-shortnr lint-urlstore
+
 unrootify:
 	sudo chown -R $$(id -u):$$(id -g) .
