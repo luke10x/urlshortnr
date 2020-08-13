@@ -81,7 +81,7 @@ $breakpoint-small: 620px;
   <div id="shortnr-el">
     <h1>URL Shortener</h1>
     <form>
-      <input v-model="inputValue" placeholder="Enter link here" />
+      <input v-model="inputValue" placeholder="Enter link here" data-url />
       <button
         v-on:click="handleCreateUrl"
         value="Shorten URL"
@@ -108,7 +108,7 @@ $breakpoint-small: 620px;
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { UrlEntry } from "../shared/rest";
-import { fetchWrapper as fetch } from './boundaries';
+import { fetchWrapper as fetch } from "./boundaries";
 
 @Component
 export default class Shortnr extends Vue {
@@ -117,7 +117,7 @@ export default class Shortnr extends Vue {
   public inputValue = "";
   public error = "";
 
-  handleCreateUrl(event: Event): void {
+  async handleCreateUrl(event: Event) {
     event.preventDefault();
 
     if (this.loading) {
@@ -129,6 +129,7 @@ export default class Shortnr extends Vue {
       setTimeout(() => {
         this.error = "";
       }, 1000);
+
       return;
     }
 
@@ -137,36 +138,39 @@ export default class Shortnr extends Vue {
     this.inputValue = "";
     this.loading = true;
 
-    fetch("http://penguin.linux.test:9090/", {
-      method: "post",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-      .then((response: Response) => response.json())
-      .then((createdEntry: UrlEntry) => {
-        this.loading = false;
-        this.urls.unshift(createdEntry);
-      })
-      .catch((e: Error) => {
-        this.loading = false;
-        console.error("Error while saving url", e);
-      });
+    try {
+      const response: Response = await fetch(
+        "http://penguin.linux.test:9090/",
+        {
+          method: "post",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        }
+      );
+
+      const createdEntry = (await response.json()) as UrlEntry;
+
+      this.urls.unshift(createdEntry);
+    } catch (e) {
+      console.error("Error while saving url", e);
+    } finally {
+      this.loading = false;
+    }
   }
 
-  mounted() {
+  async mounted() {
     this.loading = true;
-    fetch("http://penguin.linux.test:9090/")
-      .then((response: Response) => response.json())
-      .then((json: Array<UrlEntry>) => {
-        this.loading = false;
-        this.urls = json;
-      })
-      .catch((error: Error) => {
-        this.loading = false;
-        console.error("Failed to fetch", error);
-      });
+    try {
+      const response: Response = await fetch("http://penguin.linux.test:9090/");
+      const json: Array<UrlEntry> = await response.json();
+      this.urls = json;
+    } catch (error) {
+      console.error("Failed to fetch", error);
+    } finally {
+      this.loading = false;
+    }
   }
 }
 </script>
