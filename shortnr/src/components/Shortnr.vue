@@ -126,9 +126,7 @@ export default class Shortnr extends Vue {
 
     if (this.inputValue === "") {
       this.error = "Link cannot be empty";
-      setTimeout(() => {
-        this.error = "";
-      }, 1000);
+      setTimeout(() => { this.error = ""; }, 1000);
 
       return;
     }
@@ -150,9 +148,21 @@ export default class Shortnr extends Vue {
         }
       );
 
-      const createdEntry = (await response.json()) as UrlEntry;
+      if (response.status === 201) {
+        const createdEntry = (await response.json()) as UrlEntry;
+        this.urls.unshift(createdEntry);
+      } else if (response.status === 503) {
+        this.error = "Server is busy, try again later";
+        setTimeout(() => { this.error = ""; }, 1000);
+      } else if (response.status === 400) {
+        const message = (await response.json()) as { error: string};
+        this.error = message.error;
+        setTimeout(() => { this.error = ""; }, 1000);
+      } else {
+        this.error = "Unexpected error occured!";
+        setTimeout(() => { this.error = ""; }, 1000);
+      }
 
-      this.urls.unshift(createdEntry);
     } catch (e) {
       console.error("Error while saving url", e);
     } finally {

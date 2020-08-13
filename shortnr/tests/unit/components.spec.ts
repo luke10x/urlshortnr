@@ -103,12 +103,76 @@ describe("Shortnr.vue", () => {
     const button = wrapper.find("button");
 
     describe("when URL stored sucessfully", () => {
-      it("adds new item to the list", () => {
-
+      it("adds new item to the list", async () => {
         expect(wrapper.find("ul li").exists()).toBe(false);
+
+        fetchMock.mockResolvedValue({
+          status: 201,
+          json: () =>
+            Promise.resolve({
+              url: "https://luke10x.dev",
+              code: "https://pbid.io/kdsm3220"
+            })
+        });
 
         wrapper.find("[data-url]").setValue("https://luke10x.dev");
         button.trigger("click");
+        await flushPromises();
+
+        expect(wrapper.find("ul li").text()).toContain("luke10x.dev");
+        expect(wrapper.find("ul li").text()).toContain("pbid.io/kdsm3220");
+      });
+    });
+  });
+
+  describe("errors while trying to create URLs", () => {
+    fetchMock.mockResolvedValue({
+      json: () => Promise.resolve([])
+    });
+    const wrapper = shallowMount(Shortnr);
+    const button = wrapper.find("button");
+
+    describe("server is busy", () => {
+      it("shows error", async () => {
+        fetchMock.mockResolvedValue({
+          status: 503,
+        });
+        wrapper.find("[data-url]").setValue("https://luke10x.dev");        
+        button.trigger("click");
+        await flushPromises();
+        expect(wrapper.find("ul li").exists()).toBe(false);
+        expect(wrapper.find(".error").text())
+          .toContain("Server is busy, try again later");
+      });
+    });
+
+    describe("server crashed", () => {
+      it("shows error", async () => {
+        fetchMock.mockResolvedValue({
+          status: 500,
+        });
+        wrapper.find("[data-url]").setValue("https://luke10x.dev");
+        button.trigger("click");
+        await flushPromises();
+        expect(wrapper.find("ul li").exists()).toBe(false);
+        expect(wrapper.find(".error").text())
+          .toContain("Unexpected error occured");
+      });
+    });
+
+    describe("Validation error", () => {
+      it("shows error from the response body", async () => {
+        fetchMock.mockResolvedValue({
+          status: 400,
+          json: () => Promise.resolve({ error: "The URL must be HTTPS"})
+
+        });
+        wrapper.find("[data-url]").setValue("http://luke10x.dev/");
+        button.trigger("click");
+        await flushPromises();
+        expect(wrapper.find("ul li").exists()).toBe(false);
+        expect(wrapper.find(".error").text())
+          .toContain("The URL must be HTTPS");
       });
     });
   });
