@@ -40,5 +40,13 @@ lint-urlstore:
 
 lint: lint-shortnr lint-urlstore
 
+test-shortnr:
+	docker-compose run --rm shortnr "npm run test:unit -- --verbose"
+
+test-urlstore:
+	docker-compose run --rm urlstore "echo test"
+
+test: test-shortnr test-urlstore
+
 unrootify:
 	sudo chown -R $$(id -u):$$(id -g) .

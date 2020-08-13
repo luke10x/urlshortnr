@@ -108,6 +108,7 @@ $breakpoint-small: 620px;
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { UrlEntry } from "../shared/rest";
+import { fetchWrapper as fetch } from './boundaries';
 
 @Component
 export default class Shortnr extends Vue {
