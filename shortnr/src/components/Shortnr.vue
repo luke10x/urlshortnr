@@ -98,7 +98,9 @@ $breakpoint-small: 620px;
         </div>
         <div class="short">
           <a class="url" :href="item.code">{{ item.code }}</a>
-          <a class="copy" href="#" v-on:click="copyToClipboard(item.code)">Copy</a>
+          <a class="copy" href="#" v-on:click="copyToClipboard(item.code)"
+            >Copy</a
+          >
         </div>
       </li>
     </ul>
@@ -166,13 +168,16 @@ export default class Shortnr extends Vue {
           this.error = "";
         }, 1000);
       } else {
-        this.error = "Unexpected error occured!";
+        this.error = "Unexpected response!";
         setTimeout(() => {
           this.error = "";
         }, 1000);
       }
     } catch (e) {
-      console.error("Error while saving url", e);
+      this.error = "Network error!";
+      setTimeout(() => {
+        this.error = "";
+      }, 1000);
     } finally {
       this.loading = false;
     }
@@ -185,7 +190,7 @@ export default class Shortnr extends Vue {
       const json: Array<UrlEntry> = await response.json();
       this.urls = json;
     } catch (error) {
-      console.error("Failed to fetch", error);
+      this.error = "Network error";
     } finally {
       this.loading = false;
     }

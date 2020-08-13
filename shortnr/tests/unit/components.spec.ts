@@ -156,9 +156,7 @@ describe("Shortnr.vue", () => {
         button.trigger("click");
         await flushPromises();
         expect(wrapper.find("ul li").exists()).toBe(false);
-        expect(wrapper.find(".error").text()).toContain(
-          "Unexpected error occured"
-        );
+        expect(wrapper.find(".error").text()).toContain("Unexpected response");
       });
     });
 
@@ -176,6 +174,26 @@ describe("Shortnr.vue", () => {
           "The URL must be HTTPS"
         );
       });
+    });
+
+    describe("network error", () => {
+      it("shows error", async () => {
+        fetchMock.mockRejectedValue(new Error("net::ERR_CONNECTION_REFUSED"));
+        wrapper.find("[data-url]").setValue("http://luke10x.dev/");
+        button.trigger("click");
+        await flushPromises();
+        expect(wrapper.find("ul li").exists()).toBe(false);
+        expect(wrapper.find(".error").text()).toContain("Network error");
+      });
+    });
+  });
+
+  describe("error when trying to fetch the list", () => {
+    fetchMock.mockRejectedValue(new Error("net::ERR_CONNECTION_REFUSED"));
+    const wrapper = shallowMount(Shortnr);
+    it("shows error", () => {
+      expect(wrapper.find("ul li").exists()).toBe(false);
+      expect(wrapper.find(".error").text()).toContain("Network error");
     });
   });
 });
