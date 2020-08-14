@@ -11,7 +11,7 @@ export const loadDb = async () => {
       console.log('Cannot connect to database ' + dbUrl, e);
     },
   );
-  const client = <MongoClient>await mongoClientPromise;
+  const client = (await mongoClientPromise) as MongoClient;
 
   return client.db('urlstore');
 };
@@ -23,4 +23,15 @@ export const fetchUrls = async (): Promise<Array<any>> => {
     .find({})
     .sort({ code: -1 })
     .toArray();
+};
+
+export const insertUrl = async (newEntry: any) => {
+  const db = await loadDb();
+  const urlCollection = db.collection('urls');
+  urlCollection
+    .insertOne(newEntry)
+    .then(result => {
+      console.log(result);
+    })
+    .catch(error => console.error(error));
 };

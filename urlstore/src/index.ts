@@ -1,7 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { loadDb } from './db';
-import { handleUrlListAction } from './actions';
+import { handleUrlListAction, handleCreateUrlAction } from './actions';
 
 const app = express();
 app.use(cors());
@@ -12,28 +11,17 @@ app.get('/', async (_, res) => {
   try {
     handleUrlListAction(res);
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 });
 
 app.post('/', async (req, res) => {
   console.log('🔗 POST: ', req.body);
-
-  const newEntry = {
-    code: new Date().getTime().toString(36),
-    url: req.body.url,
-  };
-
-  const db = await loadDb();
-  const urlCollection = db.collection('urls');
-  urlCollection
-    .insertOne(newEntry)
-    .then(result => {
-      console.log(result);
-    })
-    .catch(error => console.error(error));
-
-  res.status(201).send(newEntry);
+  try {
+    handleCreateUrlAction(req, res);
+  } catch (e) {
+    console.error(e);
+  }
 });
 
 const port = process.env.PORT || 9090;
