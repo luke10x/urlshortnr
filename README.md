@@ -14,6 +14,9 @@ Before running this on a Chromebook:
 
     export $(cat .env.penguin.linux.test | xargs)
 
+## Deployment
+
+This application is deployed on [heroku](https://shortnor.herokuapp.com).
 ### MongoDb shell
 
 To enter mongo shell run `make into-mongo-db`,
