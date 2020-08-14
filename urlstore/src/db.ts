@@ -28,10 +28,11 @@ export const fetchUrls = async (): Promise<Array<any>> => {
 export const insertUrl = async (newEntry: any) => {
   const db = await loadDb();
   const urlCollection = db.collection('urls');
-  urlCollection
-    .insertOne(newEntry)
-    .then(result => {
-      console.log(result);
-    })
-    .catch(error => console.error(error));
+  return urlCollection.insertOne(newEntry);
+};
+
+export const createUniqueIndex = async () => {
+  const db = await loadDb();
+  const urlCollection = db.collection('urls');
+  urlCollection.createIndex({ code: 1 }, { unique: true });
 };

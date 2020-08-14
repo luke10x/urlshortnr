@@ -4,17 +4,17 @@ import { generateHash } from './hash';
 import { config } from './config';
 
 interface UrlEntry {
-  code: string, url: string
-};
+  code: string;
+  url: string;
+}
 
 const recordToResponse = (record: UrlEntry) => ({
   ...record,
-  code: config.XLINK_URL + record.code
+  code: config.XLINK_URL + record.code,
 });
 
 export const handleUrlListAction = async (res: Response<any>) => {
   const responseBody = (await fetchUrls()).map(recordToResponse);
-  console.log('RB', responseBody);
   res.send(responseBody);
 };
 
@@ -27,7 +27,17 @@ export const handleCreateUrlAction = async (
     url: req.body.url,
   };
 
-  insertUrl(newEntry);
+  try {
+    await insertUrl(newEntry);
+  } catch (e) {
+    if (e.code === 11000) {
+      res.status(503).send({
+        error: 'Wait until different code is generated and try again later',
+      });
+      return;
+    }
+    throw e;
+  }
 
   const newEntryResponse = recordToResponse(newEntry);
 

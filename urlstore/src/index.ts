@@ -1,6 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import { handleUrlListAction, handleCreateUrlAction } from './actions';
+import { createUniqueIndex } from './db';
+
+createUniqueIndex().then(() => console.log('☝️ Unique index created'));
 
 const app = express();
 app.use(cors());
@@ -11,7 +14,8 @@ app.get('/', async (_, res) => {
   try {
     handleUrlListAction(res);
   } catch (e) {
-    console.error(e);
+    console.error('Error hile handling GET /', e);
+    res.status(500).send({ error: 'Unexpected error' });
   }
 });
 
@@ -20,7 +24,8 @@ app.post('/', async (req, res) => {
   try {
     handleCreateUrlAction(req, res);
   } catch (e) {
-    console.error(e);
+    console.error('Error hile handling POST /', e);
+    res.status(500).send({ error: 'Unexpected error' });
   }
 });
 

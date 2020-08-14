@@ -88,8 +88,6 @@ $breakpoint-small: 620px;
           }
           .copy {
             align-self: center;
-
-            // flex: 0 0 40px;
             text-align: center;
             padding: 2px 10px;
             background: #92d3f5;

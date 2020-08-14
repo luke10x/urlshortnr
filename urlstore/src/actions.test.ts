@@ -8,6 +8,7 @@ import { generateHash } from './hash';
 jest.mock('./hash');
 
 import { config } from './config';
+import { MongoError } from 'mongodb';
 jest.mock('./config');
 
 describe('Handle URL list action', () => {
@@ -64,6 +65,44 @@ describe('Handle create URL action', () => {
       expect(res.send).toHaveBeenCalledWith({
         url: 'https://luke10x.dev',
         code: 'https://pbid.io/g3n3r4t3',
+      });
+    });
+  });
+
+  describe('database errors when creating a new post', () => {
+    const req = {
+      body: { url: 'https://luke10x.dev', code: 'g3n3r4t3' },
+    };
+
+    const res: Partial<Response<any>> = {};
+    res.status = jest.fn().mockReturnValue(res);
+    res.send = jest.fn().mockReturnValue(res);
+
+    const generateHashMock = generateHash as jest.Mock;
+    generateHashMock.mockReturnValue('g3n3r4t3');
+
+    it('handles generic database errors', async () => {
+      const insertUrlMock = insertUrl as jest.Mock;
+      insertUrlMock.mockRejectedValue(new Error('Database corruption'));
+
+      let error;
+      try {
+        await handleCreateUrlAction(req as Request<any>, res as Response<any>);
+      } catch (e) {
+        error = e;
+      }
+      expect(error).toEqual(new Error('Database corruption'));
+    });
+
+    it('handles unique key violation', async () => {
+      const insertUrlMock = insertUrl as jest.Mock;
+      insertUrlMock.mockRejectedValue(new MongoError({ code: 11000 }));
+
+      await handleCreateUrlAction(req as Request<any>, res as Response<any>);
+
+      expect(res.status).toHaveBeenCalledWith(503);
+      expect(res.send).toHaveBeenCalledWith({
+        error: expect.stringContaining('try again later'),
       });
     });
   });
