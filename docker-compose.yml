@@ -1,7 +1,7 @@
 version: "3.7"
 services:
   shortnr:
-    image: node
+    image: node:14.8
     volumes:
       - "./shortnr:/mnt/shortnr"
     working_dir: "/mnt/shortnr"
@@ -18,7 +18,7 @@ services:
       - 8080:8080
 
   urlstore:
-    image: node
+    image: node:14.8
     volumes:
       - "./urlstore:/mnt/urlstore"
     working_dir: "/mnt/urlstore"
@@ -38,7 +38,7 @@ services:
       - 9090:9090
 
   xlink:
-    image: node
+    image: node:14.8
     volumes:
       - "./xlink:/mnt/xlink"
     working_dir: "/mnt/xlink"
