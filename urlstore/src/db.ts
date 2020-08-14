@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-export const loadMongoClient = () => {
+export const loadDb = async () => {
   const dbUrl = process.env.DB_URL;
   if (dbUrl === undefined) {
     console.error('DB_URL is undefined');
@@ -11,6 +11,16 @@ export const loadMongoClient = () => {
       console.log('Cannot connect to database ' + dbUrl, e);
     },
   );
+  const client = <MongoClient>await mongoClientPromise;
 
-  return mongoClientPromise;
+  return client.db('urlstore');
+};
+
+export const fetchUrls = async (): Promise<Array<any>> => {
+  const db = await loadDb();
+  return await db
+    .collection('urls')
+    .find({})
+    .sort({ code: -1 })
+    .toArray();
 };

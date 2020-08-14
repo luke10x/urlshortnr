@@ -3,7 +3,7 @@
     "target": "ES2015",
     "module": "CommonJS",
     "lib": ["es6"],
-    "types": ["node"],
+    "types": ["node", "jest"],
     "moduleResolution": "node",
     "noImplicitAny": true,
     "esModuleInterop": true,

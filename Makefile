@@ -44,7 +44,7 @@ test-shortnr:
 	docker-compose run --rm shortnr "npm run test:unit -- --verbose"
 
 test-urlstore:
-	docker-compose run --rm urlstore "echo test"
+	docker-compose run --rm urlstore "npm test -- --verbose"
 
 test: test-shortnr test-urlstore
 

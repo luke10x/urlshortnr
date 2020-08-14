@@ -1,23 +1,19 @@
 import express from 'express';
 import cors from 'cors';
-import { loadMongoClient } from './db';
-import { MongoClient } from 'mongodb';
+import { loadDb } from './db';
+import { handleUrlListAction } from './actions';
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/', async (req, res) => {
+app.get('/', async (_, res) => {
   console.log('🔗 GET');
-
-  const mongoClient = (await loadMongoClient()) as MongoClient;
-  const db = mongoClient.db('urlstore');
-  const urls = await db
-    .collection('urls')
-    .find({})
-    .toArray();
-
-  res.send(urls);
+  try {
+    handleUrlListAction(res);
+  } catch (e) {
+    console.log(e);
+  }
 });
 
 app.post('/', async (req, res) => {
@@ -28,8 +24,7 @@ app.post('/', async (req, res) => {
     url: req.body.url,
   };
 
-  const mongoClient = (await loadMongoClient()) as MongoClient;
-  const db = mongoClient.db('urlstore');
+  const db = await loadDb();
   const urlCollection = db.collection('urls');
   urlCollection
     .insertOne(newEntry)
@@ -38,7 +33,7 @@ app.post('/', async (req, res) => {
     })
     .catch(error => console.error(error));
 
-  res.send(newEntry);
+  res.status(201).send(newEntry);
 });
 
 const port = process.env.PORT || 9090;
