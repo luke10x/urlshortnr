@@ -25,7 +25,7 @@ services:
     environment:
       DB_URL: ${DB_URL:-mongodb://mongouser:mongopassword@mongo:27017/urlstore}
       SHORTNR_URL: ${SHORTNR_URL:-http://localhost:8080/}
-      XLINK_URL: ${XLINK_URL:-http://localhost:9999/}
+      XLINK_URL: ${XLINK_URL:-http://localhost:7070/}
       PORT: 9090
     entrypoint: "/bin/bash -c"
     command:
@@ -36,6 +36,24 @@ services:
         )
     ports:
       - 9090:9090
+
+  xlink:
+    image: node
+    volumes:
+      - "./xlink:/mnt/xlink"
+    working_dir: "/mnt/xlink"
+    environment:
+      DB_URL: ${DB_URL:-mongodb://mongouser:mongopassword@mongo:27017/urlstore}
+      PORT: 7070
+    entrypoint: "/bin/bash -c"
+    command:
+      - |
+        npm start || (\
+          echo "⛔ \`npm start\` failed, but the container is running..." && \
+          tail -f /dev/null \
+        )
+    ports:
+      - 7070:7070
 
   mongo:
     image: mongo
