@@ -45,7 +45,7 @@ describe('actions', () => {
 
     describe('success', () => {
       const req = {
-        body: { url: 'https://luke10x.dev', code: 'g3n3r4t3' },
+        body: { url: 'https://luke10x.dev' },
       };
 
       const res: Partial<Response<any>> = {};
@@ -81,7 +81,7 @@ describe('actions', () => {
 
     describe('database errors when creating a new post', () => {
       const req = {
-        body: { url: 'https://luke10x.dev', code: 'g3n3r4t3' },
+        body: { url: 'https://luke10x.dev' },
       };
 
       const res: Partial<Response<any>> = {};
