@@ -64,28 +64,36 @@ $breakpoint-small: 620px;
           color: #1e50a0;
         }
         &.long {
+              align-self: center;
+
           text-align: left;
           flex-grow: 1;
-          flex-shrink: 0;
-          flex-basis: 60%;
+          flex-shrink: 1;
+          flex-basis: 1%;
           @media (max-width: $breakpoint-small) {
             flex-basis: 100%;
           }
         }
         &.short {
-          flex: 1;
+          flex: 1 0;
           display: flex;
           justify-content: space-between center;
           .url {
-            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            flex: 1 0;
             text-align: left;
+            align-self: center;
           }
           .copy {
-            flex: 0 0;
+            align-self: center;
+
+            // flex: 0 0 40px;
             text-align: center;
-            // width: 40pt;
-            // padding-right: 0 10px 0 10px;
+            padding: 2px 10px;
             background: #92d3f5;
+            border-radius: 5px;
           }
         }
       }
