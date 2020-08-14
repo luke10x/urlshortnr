@@ -2,10 +2,12 @@ import { shallowMount } from "@vue/test-utils";
 import Shortnr from "@/components/Shortnr.vue";
 import flushPromises from "flush-promises";
 
-import { fetchWrapper } from "@/components/boundaries";
+import { fetchWrapper, config } from "@/components/boundaries";
 jest.mock("@/components/boundaries");
 
 describe("Shortnr.vue", () => {
+  config.URLSTORE_URL = "http://urlstore.test:9090/";
+
   // const fetchMock = <jest.Mock<typeof fetchWrapper>>fetchWrapper;
   const fetchMock = fetchWrapper as jest.Mock;
 
@@ -82,7 +84,7 @@ describe("Shortnr.vue", () => {
         button.trigger("click");
 
         expect(fetchMock).toHaveBeenLastCalledWith(
-          "http://penguin.linux.test:9090/",
+          "http://urlstore.test:9090/",
           expect.anything()
         );
         expect(fetchMock).toHaveBeenLastCalledWith(

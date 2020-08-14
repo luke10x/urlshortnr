@@ -6,7 +6,7 @@ services:
       - "./shortnr:/mnt/shortnr"
     working_dir: "/mnt/shortnr"
     environment:
-      URLSTORE_URL: ${URLSTORE_URL:-http://localhost:9090}
+      VUE_APP_URLSTORE_URL: ${URLSTORE_URL:-http://localhost:9090}
     entrypoint: "/bin/bash -c"
     command:
       - |
@@ -25,7 +25,8 @@ services:
     environment:
       DB_URL: ${DB_URL:-mongodb://mongouser:mongopassword@mongo:27017/urlstore}
       SHORTNR_URL: ${SHORTNR_URL:-http://localhost:8080}
-      PORT:
+      XLINK_URL: ${XLINK_URL:-http://localhost:9999}
+      PORT: 9090
     entrypoint: "/bin/bash -c"
     command:
       - |

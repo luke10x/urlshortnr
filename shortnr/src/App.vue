@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Shortnr msg="Welcome to Your Vue.js + TypeScript App" />
+    <Shortnr />
   </div>
 </template>
 
@@ -17,16 +17,12 @@ export default class App extends Vue {}
 </script>
 
 <style lang="scss">
-body {
-  background: #3f3f3f;
-}
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 40px;
 }
 </style>

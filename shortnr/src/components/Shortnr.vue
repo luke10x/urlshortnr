@@ -58,7 +58,9 @@ $breakpoint-small: 620px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-        a, a:hover, a:visited {
+        a,
+        a:hover,
+        a:visited {
           color: #1e50a0;
         }
         &.long {
@@ -113,7 +115,10 @@ $breakpoint-small: 620px;
         </div>
         <div class="short">
           <a class="url" :href="item.code">{{ item.code }}</a>
-          <a class="copy" href="#" v-on:click="copyToClipboard($event, item.code)"
+          <a
+            class="copy"
+            href="#"
+            v-on:click="copyToClipboard($event, item.code)"
             >Copy</a
           >
         </div>
@@ -125,7 +130,7 @@ $breakpoint-small: 620px;
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { UrlEntry } from "../shared/rest";
-import { fetchWrapper as fetch } from "./boundaries";
+import { fetchWrapper as fetch, config } from "./boundaries";
 import { copyToClipboard } from "./clipboard";
 
 @Component
@@ -157,16 +162,13 @@ export default class Shortnr extends Vue {
     this.loading = true;
 
     try {
-      const response: Response = await fetch(
-        "http://penguin.linux.test:9090/",
-        {
-          method: "post",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(payload)
-        }
-      );
+      const response: Response = await fetch(config.URLSTORE_URL, {
+        method: "post",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
 
       if (response.status === 201) {
         const createdEntry = (await response.json()) as UrlEntry;
@@ -201,7 +203,7 @@ export default class Shortnr extends Vue {
   async mounted() {
     this.loading = true;
     try {
-      const response: Response = await fetch("http://penguin.linux.test:9090/");
+      const response: Response = await fetch(config.URLSTORE_URL);
       const json: Array<UrlEntry> = await response.json();
       this.urls = json;
     } catch (error) {
