@@ -48,7 +48,7 @@ services:
     entrypoint: "/bin/bash -c"
     command:
       - |
-        npm start || (\
+        npm run start:dev || (\
           echo "⛔ \`npm start\` failed, but the container is running..." && \
           tail -f /dev/null \
         )
