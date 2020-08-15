@@ -64,7 +64,7 @@ $breakpoint-small: 620px;
           color: #1e50a0;
         }
         &.long {
-              align-self: center;
+          align-self: center;
 
           text-align: left;
           flex-grow: 1;
