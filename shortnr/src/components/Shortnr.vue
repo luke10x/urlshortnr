@@ -135,7 +135,7 @@ $breakpoint-small: 620px;
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
-import { UrlEntry } from "../shared/rest";
+import { UrlEntry } from "./rest";
 import { fetchWrapper as fetch, config } from "./boundaries";
 import { copyToClipboard } from "./clipboard";
 

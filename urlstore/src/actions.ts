@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import { fetchUrls, insertUrl } from './db';
-import { generateHash } from './hash';
+import { generateHash } from './code';
 import { config } from './config';
 import { isValidUrl } from './validate';
 

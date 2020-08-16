@@ -8,8 +8,8 @@ jest.mock('./db');
 import { isValidUrl } from './validate';
 jest.mock('./validate');
 
-import { generateHash } from './hash';
-jest.mock('./hash');
+import { generateHash } from './code';
+jest.mock('./code');
 
 import { config } from './config';
 jest.mock('./config');
