@@ -2,6 +2,7 @@
 $breakpoint-small: 620px;
 
 #shortnr-el {
+  padding: 5px;
   h1 {
     color: #fff;
     padding: 10pt 0;
