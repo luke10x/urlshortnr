@@ -45,6 +45,13 @@ $breakpoint-small: 620px;
     padding: 5px;
     border-radius: 5px;
   }
+  .loading {
+    color: #eee;
+    margin-top: 5px;
+    padding: 5px;
+    border-radius: 5px;
+    font-style: italic;
+  }
   ul {
     li {
       display: flex;
@@ -114,6 +121,7 @@ $breakpoint-small: 620px;
       </button>
     </form>
     <div class="error" v-if="error">{{ this.error }}</div>
+    <div class="loading" v-if="loading">Loading, please be patient...</div>
     <ul>
       <li v-for="item in this.urls" :key="item.code">
         <div class="long">
