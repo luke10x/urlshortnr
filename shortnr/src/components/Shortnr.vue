@@ -45,7 +45,7 @@ $breakpoint-small: 620px;
     padding: 5px;
     border-radius: 5px;
   }
-  .loading {
+  div.loading {
     color: #eee;
     margin-top: 5px;
     padding: 5px;
